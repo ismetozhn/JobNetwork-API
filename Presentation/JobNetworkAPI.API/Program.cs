@@ -1,11 +1,13 @@
 using FluentValidation.AspNetCore;
 using JobAdvertAPI.Infrastructure.Filters;
 using JobNetworkAPI.Application.Validators.JobPosts;
+using JobNetworkAPI.Infrastructure;
 using JobNetworkAPI.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistenceServices();
+builder.Services.AddInfrastructureServices();
 
 
 

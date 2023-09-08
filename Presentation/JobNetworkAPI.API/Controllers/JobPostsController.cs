@@ -1,5 +1,6 @@
 ﻿using JobNetworkAPI.Application.Repositories;
 using JobNetworkAPI.Application.RequestParameters;
+using JobNetworkAPI.Application.Services;
 using JobNetworkAPI.Application.ViewModels.JobPosts;
 using JobNetworkAPI.Application.ViewModels.Users;
 using JobNetworkAPI.Persistence.Repositories;
@@ -16,13 +17,15 @@ namespace JobNetworkAPI.API.Controllers
         readonly private IJobPostsReadRepository _jobPostsReadRepository;
         readonly    private IJobPostsWriteRepository _jobPostsWriteRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        readonly IFileService _fileService;
 
-        public JobPostsController(IJobPostsReadRepository jobPostsReadRepository,IJobPostsWriteRepository jobPostsWriteRepository,
-           IWebHostEnvironment webHostEnvironment )
+        public JobPostsController(IJobPostsReadRepository jobPostsReadRepository, IJobPostsWriteRepository jobPostsWriteRepository,
+           IWebHostEnvironment webHostEnvironment, IFileService fileService)
         {
             _jobPostsReadRepository = jobPostsReadRepository;
             _jobPostsWriteRepository = jobPostsWriteRepository;
             this._webHostEnvironment = webHostEnvironment;
+            _fileService = fileService;
         }
 
 
@@ -106,31 +109,70 @@ namespace JobNetworkAPI.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+           
             await _jobPostsWriteRepository.RemoveAsync(id);
             await _jobPostsWriteRepository.SaveAsync();
             return Ok();
         }
 
         [HttpPost("[action]")]
-
+       
         public async Task<IActionResult> Upload()
         {
-            string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath,"resource/jobpost-images");
+            // string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath,"resource/jobpost-images");
 
-            if(!Directory.Exists(uploadPath))
+            // if(!Directory.Exists(uploadPath))
+            //    Directory.CreateDirectory(uploadPath);
+
+            //Random r = new();
+
+            // foreach(IFormFile file in Request.Form.Files)
+            // {
+            //    string fullPath=Path.Combine(uploadPath,$"{r.Next()}{Path.GetExtension(file.FileName)}");
+
+
+            //     using FileStream fileStream = new(fullPath,FileMode.Create,FileAccess.Write,FileShare.None,1024*1024,useAsync:false);
+            //     await file.CopyToAsync(fileStream);
+            //    await  fileStream.FlushAsync();
+            // }
+
+
+
+
+            // await _fileService.UploadAsync("resource/jobpost-images", Request.Form.Files);
+
+
+
+            string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "resource/jobpost-images");
+
+            if (!Directory.Exists(uploadPath))
                 Directory.CreateDirectory(uploadPath);
 
-            Random r = new();
-
-            foreach(IFormFile file in Request.Form.Files)
+            foreach (IFormFile file in Request.Form.Files)
             {
-               string fullPath=Path.Combine(uploadPath,$"{r.Next()}{Path.GetExtension(file.FileName)}");
+                string fileName = Path.GetFileName(file.FileName);
 
+                // Eğer aynı isimde dosya varsa, ismi değiştir
+                int count = 1;
+                string uniqueFileName = fileName;
+                while (System.IO.File.Exists(Path.Combine(uploadPath, uniqueFileName)))
+                {
+                    string extension = Path.GetExtension(fileName);
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+                    uniqueFileName = $"{fileNameWithoutExtension}_{count}{extension}";
+                    count++;
+                }
 
-                using FileStream fileStream = new(fullPath,FileMode.Create,FileAccess.Write,FileShare.None,1024*1024,useAsync:false);
-                await file.CopyToAsync(fileStream);
-               await  fileStream.FlushAsync();
+                string fullPath = Path.Combine(uploadPath, uniqueFileName);
+
+                using (FileStream fileStream = new(fullPath, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 1024, useAsync: false))
+                {
+                    await file.CopyToAsync(fileStream);
+                    await fileStream.FlushAsync();
+                }
             }
+
+
 
             return Ok();
         }
