@@ -11,7 +11,7 @@ namespace JobNetworkAPI.Domain.Entities.Common
         public int Id { get; set; }
         public DateTime? CreatedDate { get; set; }
 
-        virtual public DateTime UpdatedDate { get; set; }
+        virtual public DateTime? UpdatedDate { get; set; }
 
     }
 }

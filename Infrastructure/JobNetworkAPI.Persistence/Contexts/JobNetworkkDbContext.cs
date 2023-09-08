@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using JobNetworkAPI.Domain.Entities;
 using JobNetworkAPI.Domain.Entities.Common;
 using Microsoft.EntityFrameworkCore;
+using File = JobNetworkAPI.Domain.Entities.File;
 
 namespace JobNetworkAPI.API;
 
@@ -27,6 +29,11 @@ public partial class JobNetworkkDbContext : DbContext
     public virtual DbSet<Users> Users { get; set; }
 
     public virtual DbSet<UserTypes> UserTypes { get; set; }
+
+    public DbSet<File> Files { get; set; }
+    public DbSet<JobPostImageFile> JobPostImageFiles { get; set; }
+    public DbSet<CvFile> CvFiles { get; set; }
+
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

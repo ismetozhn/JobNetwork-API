@@ -3,9 +3,13 @@ using JobNetworkAPI.Application.RequestParameters;
 using JobNetworkAPI.Application.Services;
 using JobNetworkAPI.Application.ViewModels.JobPosts;
 using JobNetworkAPI.Application.ViewModels.Users;
+using JobNetworkAPI.Domain.Entities;
 using JobNetworkAPI.Persistence.Repositories;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace JobNetworkAPI.API.Controllers
 {
@@ -18,16 +22,31 @@ namespace JobNetworkAPI.API.Controllers
         readonly    private IJobPostsWriteRepository _jobPostsWriteRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
         readonly IFileService _fileService;
+        readonly IFileWriteRepository _fileWriteRepository;
+        readonly IFileReadRepository _fileReadRepository;
+        readonly IJobPostImageFileReadRepository _jobPostImageFileReadRepository;
+        readonly IJobPostImageFileWriteRepository _jobPostImageFileWriteRepository;
+        readonly ICvFileWriteRepository _cvFileWriteRepository;
+        readonly ICvFileReadRepository _cvFileReadRepository;
+
+       
 
         public JobPostsController(IJobPostsReadRepository jobPostsReadRepository, IJobPostsWriteRepository jobPostsWriteRepository,
-           IWebHostEnvironment webHostEnvironment, IFileService fileService)
+           IWebHostEnvironment webHostEnvironment, IFileService fileService, IFileWriteRepository fileWriteRepository, IFileReadRepository fileReadRepository, IJobPostImageFileReadRepository jobPostImageFileReadRepository, IJobPostImageFileWriteRepository jobPostImageFileWriteRepository, ICvFileWriteRepository cvFileWriteRepository, ICvFileReadRepository cvFileReadRepository)
         {
             _jobPostsReadRepository = jobPostsReadRepository;
             _jobPostsWriteRepository = jobPostsWriteRepository;
             this._webHostEnvironment = webHostEnvironment;
             _fileService = fileService;
+            _fileWriteRepository = fileWriteRepository;
+            _fileReadRepository = fileReadRepository;
+            _jobPostImageFileReadRepository = jobPostImageFileReadRepository;
+            _jobPostImageFileWriteRepository = jobPostImageFileWriteRepository;
+            _cvFileWriteRepository = cvFileWriteRepository;
+            _cvFileReadRepository = cvFileReadRepository;
         }
 
+  
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] Pagination pagination)
@@ -119,59 +138,24 @@ namespace JobNetworkAPI.API.Controllers
        
         public async Task<IActionResult> Upload()
         {
-            // string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath,"resource/jobpost-images");
+             var datas= await _fileService.UploadAsync("resource/cv-files", Request.Form.Files);
+            //await _jobPostImageFileWriteRepository.AddRangeAsync(datas.Select(d => new Domain.Entities.JobPostImageFile()
+            //{
+            //    FileName = d.fileName,
+            //    Path = d.path
 
-            // if(!Directory.Exists(uploadPath))
-            //    Directory.CreateDirectory(uploadPath);
+            //}).ToList());
+            //await _jobPostImageFileWriteRepository.SaveAsync();
 
-            //Random r = new();
+            //await _fileService.UploadAsync("resource/jobpost-images", Request.Form.Files);
 
-            // foreach(IFormFile file in Request.Form.Files)
-            // {
-            //    string fullPath=Path.Combine(uploadPath,$"{r.Next()}{Path.GetExtension(file.FileName)}");
-
-
-            //     using FileStream fileStream = new(fullPath,FileMode.Create,FileAccess.Write,FileShare.None,1024*1024,useAsync:false);
-            //     await file.CopyToAsync(fileStream);
-            //    await  fileStream.FlushAsync();
-            // }
-
-
-
-
-            // await _fileService.UploadAsync("resource/jobpost-images", Request.Form.Files);
-
-
-
-            string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "resource/jobpost-images");
-
-            if (!Directory.Exists(uploadPath))
-                Directory.CreateDirectory(uploadPath);
-
-            foreach (IFormFile file in Request.Form.Files)
+            await _cvFileWriteRepository.AddRangeAsync(datas.Select(d => new CvFile()
             {
-                string fileName = Path.GetFileName(file.FileName);
+                FileName = d.fileName,
+                Path = d.path
 
-                // Eğer aynı isimde dosya varsa, ismi değiştir
-                int count = 1;
-                string uniqueFileName = fileName;
-                while (System.IO.File.Exists(Path.Combine(uploadPath, uniqueFileName)))
-                {
-                    string extension = Path.GetExtension(fileName);
-                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-                    uniqueFileName = $"{fileNameWithoutExtension}_{count}{extension}";
-                    count++;
-                }
-
-                string fullPath = Path.Combine(uploadPath, uniqueFileName);
-
-                using (FileStream fileStream = new(fullPath, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 1024, useAsync: false))
-                {
-                    await file.CopyToAsync(fileStream);
-                    await fileStream.FlushAsync();
-                }
-            }
-
+            }).ToList());
+            await _cvFileWriteRepository.SaveAsync();
 
 
             return Ok();

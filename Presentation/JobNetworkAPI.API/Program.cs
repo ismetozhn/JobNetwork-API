@@ -1,5 +1,5 @@
 using FluentValidation.AspNetCore;
-using JobAdvertAPI.Infrastructure.Filters;
+using JobNetworkAPI.Infrastructure.Filters;
 using JobNetworkAPI.Application.Validators.JobPosts;
 using JobNetworkAPI.Infrastructure;
 using JobNetworkAPI.Persistence;

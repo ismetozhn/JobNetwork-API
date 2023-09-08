@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JobNetworkAPI.Domain.Entities
 {
-    internal class CvFile
+    public class CvFile : File
     {
     }
 }

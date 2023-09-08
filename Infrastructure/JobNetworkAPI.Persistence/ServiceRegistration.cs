@@ -29,6 +29,20 @@ namespace JobNetworkAPI.Persistence
 
             services.AddScoped<IJobApplicationsReadRepository, JobApplicationsReadRepository>();
             services.AddScoped<IJobApplicationsWriteRepository, JobApplicationsWriteRepository>();
+
+            services.AddScoped<IFileReadRepository, FileReadRepository>();
+            services.AddScoped<IFileWriteRepository, FileWriteRepository>();
+
+            services.AddScoped<IJobPostImageFileReadRepository, JobPostImageFileReadRepository>();
+            services.AddScoped<IJobPostImageFileWriteRepository, JobPostImageFileWriteRepository>();
+
+            services.AddScoped<ICvFileReadRepository, CvFileReadRepository>();
+            services.AddScoped<ICvFileWriteRepository, CvFileWriteRepository>();
+
+
+
+
+
         }
     }
 }

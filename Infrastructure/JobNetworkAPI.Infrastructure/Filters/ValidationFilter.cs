@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JobAdvertAPI.Infrastructure.Filters
+namespace JobNetworkAPI.Infrastructure.Filters
 {
     public class ValidationFilter : IAsyncActionFilter
     {
