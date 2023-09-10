@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobNetworkAPI.Persistence.Migrations
 {
     [DbContext(typeof(JobNetworkkDbContext))]
-    [Migration("20230908160951_mig_4")]
+    [Migration("20230909114245_mig_4")]
     partial class mig_4
     {
         /// <inheritdoc />
@@ -261,6 +261,10 @@ namespace JobNetworkAPI.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Storage")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

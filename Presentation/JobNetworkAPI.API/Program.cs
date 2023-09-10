@@ -3,12 +3,14 @@ using JobNetworkAPI.Infrastructure.Filters;
 using JobNetworkAPI.Application.Validators.JobPosts;
 using JobNetworkAPI.Infrastructure;
 using JobNetworkAPI.Persistence;
+using JobNetworkAPI.Infrastructure.Services.Storage.Local;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureServices();
 
+builder.Services.AddStorage<LocalStorage>();
 
 
 
