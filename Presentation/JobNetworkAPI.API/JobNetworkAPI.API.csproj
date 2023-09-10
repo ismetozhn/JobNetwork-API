@@ -28,4 +28,8 @@
     <ProjectReference Include="..\..\Infrastructure\JobNetworkAPI.Persistence\JobNetworkAPI.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\resource\files\" />
+  </ItemGroup>
+
 </Project>

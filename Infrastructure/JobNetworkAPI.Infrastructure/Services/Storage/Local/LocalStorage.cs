@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace JobNetworkAPI.Infrastructure.Services.Storage.Local
 {
-    public class LocalStorage : ILocalStorage
+    public class LocalStorage : Storage, ILocalStorage
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         public LocalStorage(IWebHostEnvironment webHostEnvironment)
@@ -39,20 +39,38 @@ namespace JobNetworkAPI.Infrastructure.Services.Storage.Local
                 throw ex;
             }
         }
+        //public async Task<List<(string fileName, string pathOrContainerName)>> UploadAsync(string path, IFormFileCollection files)
+        //{
+        //    string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, path);
+        //    if (!Directory.Exists(uploadPath))
+        //        Directory.CreateDirectory(uploadPath);
+
+        //    List<(string fileName, string path)> datas = new();
+        //    foreach (IFormFile file in files)
+        //    {
+        //        await CopyFileAsync($"{uploadPath}\\{file.Name}", file);
+        //        datas.Add((file.Name, $"{path}\\{file.Name}"));
+        //    }
+
+        //    return datas;
+        //}
+
         public async Task<List<(string fileName, string pathOrContainerName)>> UploadAsync(string path, IFormFileCollection files)
         {
             string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, path);
             if (!Directory.Exists(uploadPath))
                 Directory.CreateDirectory(uploadPath);
-
             List<(string fileName, string path)> datas = new();
             foreach (IFormFile file in files)
             {
-                await CopyFileAsync($"{uploadPath}\\{file.Name}", file);
-                datas.Add((file.Name, $"{path}\\{file.Name}"));
+                string fileNewName = await FileRenameAsync(uploadPath, file.Name, HasFile);
+
+                await CopyFileAsync($"{uploadPath}\\{fileNewName}", file);
+                datas.Add((fileNewName, $"{path}\\{fileNewName}"));
             }
 
             return datas;
         }
     }
 }
+    
