@@ -1,4 +1,5 @@
-﻿using JobNetworkAPI.Domain.Entities.Common;
+﻿using JobNetworkAPI.Domain.Entities;
+using JobNetworkAPI.Domain.Entities.Common;
 using System;
 using System.Collections.Generic;
 
@@ -31,4 +32,6 @@ public partial class JobPosts : BaseEntity
     public virtual ICollection<JobApplications> JobApplications { get; set; } = new List<JobApplications>();
 
     public virtual JobTypes JobType { get; set; } = null!;
+
+    public ICollection<JobPostImageFile> JobPostImageFiles { get; set; }
 }

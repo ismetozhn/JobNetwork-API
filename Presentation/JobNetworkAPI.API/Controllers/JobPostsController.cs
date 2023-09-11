@@ -138,17 +138,38 @@ namespace JobNetworkAPI.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Upload()
+        public async Task<IActionResult> Upload(int id)
         {
-            var datas = await _storageService.UploadAsync("files", Request.Form.Files);
-            //var datas = await _fileService.UploadAsync("resource/files", Request.Form.Files);
-            await _jobPostImageFileWriteRepository.AddRangeAsync(datas.Select(d => new JobPostImageFile()
+            List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("photo-images", Request.Form.Files);
+
+            JobPosts jobpost = await _jobPostsReadRepository.GetByIdAsync(id);
+
+             await _jobPostImageFileWriteRepository.AddRangeAsync(result.Select(r => new JobPostImageFile
             {
-                FileName = d.fileName,
-                Path = d.pathOrContainerName,
-                Storage = _storageService.StorageName
+                FileName= r.fileName,
+                Path= r.pathOrContainerName,
+                Storage = _storageService.StorageName,
+                JobPost = new List<JobPosts> { jobpost }
+
             }).ToList());
+
             await _jobPostImageFileWriteRepository.SaveAsync();
+
+
+
+
+
+
+            //storage yapısı ile ekleme
+            //var datas = await _storageService.UploadAsync("files", Request.Form.Files);
+            ////var datas = await _fileService.UploadAsync("resource/files", Request.Form.Files);
+            //await _cvFileWriteRepository.AddRangeAsync(datas.Select(d => new CvFile()
+            //{
+            //    FileName = d.fileName,
+            //    Path = d.pathOrContainerName,
+            //    Storage = _storageService.StorageName
+            //}).ToList());
+            //await _cvFileWriteRepository.SaveAsync();
 
             //await _invoiceFileWriteRepository.AddRangeAsync(datas.Select(d => new InvoiceFile()
             //{
