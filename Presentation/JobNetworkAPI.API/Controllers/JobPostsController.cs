@@ -30,11 +30,12 @@ namespace JobNetworkAPI.API.Controllers
         readonly ICvFileWriteRepository _cvFileWriteRepository;
         readonly ICvFileReadRepository _cvFileReadRepository;
         readonly IStorageService _storageService;
+        readonly IConfiguration configuration;
 
 
 
         public JobPostsController(IJobPostsReadRepository jobPostsReadRepository, IJobPostsWriteRepository jobPostsWriteRepository,
-           IWebHostEnvironment webHostEnvironment, IFileWriteRepository fileWriteRepository, IFileReadRepository fileReadRepository, IJobPostImageFileReadRepository jobPostImageFileReadRepository, IJobPostImageFileWriteRepository jobPostImageFileWriteRepository, ICvFileWriteRepository cvFileWriteRepository, ICvFileReadRepository cvFileReadRepository, IStorageService storageService)
+           IWebHostEnvironment webHostEnvironment, IFileWriteRepository fileWriteRepository, IFileReadRepository fileReadRepository, IJobPostImageFileReadRepository jobPostImageFileReadRepository, IJobPostImageFileWriteRepository jobPostImageFileWriteRepository, ICvFileWriteRepository cvFileWriteRepository, ICvFileReadRepository cvFileReadRepository, IStorageService storageService, IConfiguration configuration)
         {
             _jobPostsReadRepository = jobPostsReadRepository;
             _jobPostsWriteRepository = jobPostsWriteRepository;
@@ -47,6 +48,7 @@ namespace JobNetworkAPI.API.Controllers
             _cvFileWriteRepository = cvFileWriteRepository;
             _cvFileReadRepository = cvFileReadRepository;
             _storageService = storageService;
+            this.configuration = configuration;
         }
 
 
@@ -140,7 +142,7 @@ namespace JobNetworkAPI.API.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Upload(int id)
         {
-            List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("photo-images", Request.Form.Files);
+            List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("files", Request.Form.Files);
 
             JobPosts jobpost = await _jobPostsReadRepository.GetByIdAsync(id);
 
@@ -191,5 +193,50 @@ namespace JobNetworkAPI.API.Controllers
             //var d3 = _productImageFileReadRepository.GetAll(false);
             return Ok();
         }
+
+
+        //[HttpGet("[action]/{id}")]
+        //public async Task<IActionResult> GetImages(int id)
+        //{
+        //   JobPosts? jobpost = await _jobPostsReadRepository.Table.Include(p => p.JobPostImageFiles).FirstOrDefaultAsync(p => p.Id == id);
+
+        //    return Ok(jobpost.JobPostImageFiles.Select(p => new
+        //  {
+        //        p.Path,
+        //        p.FileName
+        //   }));
+
+        //}
+
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetImages(int id)
+        {
+            JobPosts? jobpost = await _jobPostsReadRepository.Table.Include(p => p.JobPostImageFiles).FirstOrDefaultAsync(p => p.Id == id);
+            
+            //await Task.Delay(2000);
+
+            return Ok(jobpost.JobPostImageFiles.Select(p => new
+            {
+                Path = $"{configuration["BaseStorageUrl"]}/{p.Path}",
+                p.FileName,
+                p.Id
+            }));
+
+        }
+
+        [HttpDelete("[action]/{id}")]
+
+        public async Task<IActionResult> DeleteJobPostImage(string id,string imageId)
+        {
+            JobPosts? jobpost = await _jobPostsReadRepository.Table.Include(p => p.JobPostImageFiles).FirstOrDefaultAsync(p => p.Id ==int.Parse(id));
+
+           JobPostImageFile jobpostImageFile = jobpost.JobPostImageFiles.FirstOrDefault(p => p.Id == int.Parse(imageId));
+            jobpost.JobPostImageFiles.Remove(jobpostImageFile);
+            await _jobPostsWriteRepository.SaveAsync();
+            return Ok();
+        }
+
+
+
     }
 }
