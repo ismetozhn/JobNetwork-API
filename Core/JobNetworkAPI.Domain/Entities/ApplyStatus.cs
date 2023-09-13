@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace JobNetworkAPI.API;
+namespace JobNetworkAPI.Domain.Entities;
 
 public partial class ApplyStatus : BaseEntity
 {

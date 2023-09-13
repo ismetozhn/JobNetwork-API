@@ -1,4 +1,4 @@
-﻿using JobNetworkAPI.API;
+﻿using JobNetworkAPI.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

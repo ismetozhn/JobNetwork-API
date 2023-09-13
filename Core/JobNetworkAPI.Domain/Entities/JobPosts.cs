@@ -3,7 +3,7 @@ using JobNetworkAPI.Domain.Entities.Common;
 using System;
 using System.Collections.Generic;
 
-namespace JobNetworkAPI.API;
+namespace JobNetworkAPI.Domain.Entities;
 
 public partial class JobPosts : BaseEntity
 {

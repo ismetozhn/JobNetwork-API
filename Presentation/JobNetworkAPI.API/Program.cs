@@ -5,11 +5,13 @@ using JobNetworkAPI.Infrastructure;
 using JobNetworkAPI.Persistence;
 using JobNetworkAPI.Infrastructure.Services.Storage.Local;
 using JobNetworkAPI.Infrastructure.Services.Storage.Azure;
+using JobNetworkAPI.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureServices();
+builder.Services.AddApplicationServices();
 
 //builder.Services.AddStorage<LocalStorage>();
 builder.Services.AddStorage<AzureStorage>();
