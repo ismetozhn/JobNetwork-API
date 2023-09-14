@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using JobNetworkAPI.Domain.Entities;
 using JobNetworkAPI.Domain.Entities.Common;
+using JobNetworkAPI.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using File = JobNetworkAPI.Domain.Entities.File;
 
 namespace JobNetworkAPI.API;
 
-public partial class JobNetworkkDbContext : DbContext
+public class JobNetworkkDbContext : IdentityDbContext<AppUser, AppRole, string>
 {
-    public JobNetworkkDbContext()
-    {
-    }
-
     public JobNetworkkDbContext(DbContextOptions<JobNetworkkDbContext> options)
         : base(options)
     {
@@ -60,6 +59,8 @@ public partial class JobNetworkkDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<IdentityUserLogin<string>>().HasKey(l => new { l.LoginProvider, l.ProviderKey });
         modelBuilder.Entity<ApplyStatus>(entity =>
         {
             entity.ToTable("ApplyStatus");
@@ -141,8 +142,8 @@ public partial class JobNetworkkDbContext : DbContext
                 .HasColumnName("UserType");
         });
 
-        OnModelCreatingPartial(modelBuilder);
+        //OnModelCreatingPartial(modelBuilder);
     }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
