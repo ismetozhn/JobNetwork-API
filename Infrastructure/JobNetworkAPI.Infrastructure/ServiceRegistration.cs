@@ -1,10 +1,12 @@
 ﻿using JobNetworkAPI.Application.Abstractions.Storage;
+using JobNetworkAPI.Application.Abstractions.Token;
 //using JobNetworkAPI.Application.Services;
 using JobNetworkAPI.Infrastructure.Enums;
 //using JobNetworkAPI.Infrastructure.Services;
 using JobNetworkAPI.Infrastructure.Services.Storage;
 using JobNetworkAPI.Infrastructure.Services.Storage.Azure;
 using JobNetworkAPI.Infrastructure.Services.Storage.Local;
+using JobNetworkAPI.Infrastructure.Services.Token;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,8 @@ namespace JobNetworkAPI.Infrastructure
         public static void AddInfrastructureServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IStorageService, StorageService>();
+            serviceCollection.AddScoped<ITokenHandler, TokenHandler>();
+
         }
         public static void AddStorage<T>(this IServiceCollection serviceCollection) where T : Storage, IStorage
         {

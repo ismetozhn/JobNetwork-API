@@ -21,11 +21,13 @@ using JobNetworkAPI.Application.Features.Commands.JobPost.RemoveJobPost;
 using JobNetworkAPI.Application.Features.Commands.JobPostImageFile.UploadJobPostImage;
 using JobNetworkAPI.Application.Features.Commands.JobPostImageFile.RemoveJobPostImage;
 using JobNetworkAPI.Application.Features.Queries.JobPostImageFile.GetJobPostImages;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JobNetworkAPI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Admin")]
     public class JobPostsController : ControllerBase
     {
         readonly IMediator _mediator;
