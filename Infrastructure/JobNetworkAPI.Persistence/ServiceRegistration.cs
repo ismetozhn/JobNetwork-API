@@ -2,8 +2,11 @@
 
 
 using JobNetworkAPI.API;
+using JobNetworkAPI.Application.Abstractions.Services;
 using JobNetworkAPI.Application.Repositories;
 using JobNetworkAPI.Domain.Entities.Identity;
+using JobNetworkAPI.Persistence.Services;
+using JobNetworkAPI.Application.Abstractions.Services;
 
 
 using JobNetworkAPI.Persistence.Repositories;
@@ -14,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JobNetworkAPI.Application.Abstractions.Services.Authentications;
 
 namespace JobNetworkAPI.Persistence
 {
@@ -51,6 +55,11 @@ namespace JobNetworkAPI.Persistence
 
             services.AddScoped<ICvFileReadRepository, CvFileReadRepository>();
             services.AddScoped<ICvFileWriteRepository, CvFileWriteRepository>();
+
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IExternalAuthentication, AuthService>();
+            services.AddScoped<IInternalAuthentication, AuthService>();
 
 
 

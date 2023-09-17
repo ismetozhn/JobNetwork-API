@@ -19,6 +19,7 @@ builder.Services.AddApplicationServices();
 
 //builder.Services.AddStorage<LocalStorage>();
 builder.Services.AddStorage<AzureStorage>();
+builder.Services.AddHttpClient();
 
 
 
@@ -75,6 +76,7 @@ app.UseHttpsRedirection();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 
