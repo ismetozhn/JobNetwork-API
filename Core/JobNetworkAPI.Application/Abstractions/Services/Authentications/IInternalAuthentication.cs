@@ -9,5 +9,6 @@ namespace JobNetworkAPI.Application.Abstractions.Services.Authentications
     public interface IInternalAuthentication
     {
         Task<DTOs.Token> LoginAsync(string Email, string Password, int accessTokenLifeTime);
+        Task<DTOs.Token> RefreshTokenLoginAsync(string refreshToken);
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Azure.Core;
 using JobNetworkAPI.Application.Abstractions.Services;
 using JobNetworkAPI.Application.DTOs.User;
+using JobNetworkAPI.Application.Exceptions;
 using JobNetworkAPI.Application.Features.Commands.AppUser.CreateUser;
 using JobNetworkAPI.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -41,6 +42,18 @@ namespace JobNetworkAPI.Persistence.Services
                     response.Message += $"{error.Code} - {error.Description}\n";
 
             return response;
+        }
+
+        public async Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenDate, int addOnAccessTokenDate)
+        {
+            if (user != null)
+            {
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenEndDate = accessTokenDate.AddSeconds(addOnAccessTokenDate);
+                await _userManager.UpdateAsync(user);
+            }
+            else
+                throw new NotFoundUserException();
         }
     }
 }

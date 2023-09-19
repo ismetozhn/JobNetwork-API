@@ -44,7 +44,7 @@ namespace JobNetworkAPI.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] GetAllJobPostQueryRequest getAllJobPostQueryRequest)
         {
-
+            
             GetAllJobPostQueryResponse response = await _mediator.Send(getAllJobPostQueryRequest);
             return Ok(response);
 
