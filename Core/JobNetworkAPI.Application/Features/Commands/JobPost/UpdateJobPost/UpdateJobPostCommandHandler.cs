@@ -1,6 +1,7 @@
 ﻿using JobNetworkAPI.Application.Repositories;
 using JobNetworkAPI.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace JobNetworkAPI.Application.Features.Commands.JobPost.UpdateJobPost
 
         readonly IJobPostsReadRepository _jobPostsReadRepository;
         readonly IJobPostsWriteRepository _jobPostsWriteRepository;
+        readonly ILogger<UpdateJobPostCommandHandler> _logger;
 
-        public UpdateJobPostCommandHandler(IJobPostsReadRepository jobPostsReadRepository, IJobPostsWriteRepository jobPostsWriteRepository)
+        public UpdateJobPostCommandHandler(IJobPostsReadRepository jobPostsReadRepository, IJobPostsWriteRepository jobPostsWriteRepository, ILogger<UpdateJobPostCommandHandler> logger)
         {
             _jobPostsReadRepository = jobPostsReadRepository;
             _jobPostsWriteRepository = jobPostsWriteRepository;
+            _logger = logger;
         }
 
         public async Task<UpdateJobPostCommandResponse> Handle(UpdateJobPostCommandRequest request, CancellationToken cancellationToken)
@@ -33,6 +36,8 @@ namespace JobNetworkAPI.Application.Features.Commands.JobPost.UpdateJobPost
             jobpost.ImagePath = request.ImagePath;
 
             await _jobPostsWriteRepository.SaveAsync();
+
+            _logger.LogInformation("İlan güncellendi.");
             return new();
 
         }
