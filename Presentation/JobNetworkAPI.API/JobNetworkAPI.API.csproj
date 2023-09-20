@@ -33,4 +33,8 @@
     <ProjectReference Include="..\..\Infrastructure\JobNetworkAPI.Persistence\JobNetworkAPI.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MiddleWares\" />
+  </ItemGroup>
+
 </Project>

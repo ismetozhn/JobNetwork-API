@@ -19,6 +19,7 @@ using Serilog.Context;
 using JobNetworkAPI.API.Configurations.ColumnWriters;
 using System.Collections.ObjectModel;
 using Microsoft.AspNetCore.HttpLogging;
+using JobNetworkAPI.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -128,6 +129,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.ConfigureExceptionHandler<Program>(app.Services.GetRequiredService<ILogger<Program>>());
 
 app.UseStaticFiles();
 app.UseSerilogRequestLogging();
