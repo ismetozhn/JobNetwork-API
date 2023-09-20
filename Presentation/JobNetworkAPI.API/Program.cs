@@ -20,12 +20,15 @@ using JobNetworkAPI.API.Configurations.ColumnWriters;
 using System.Collections.ObjectModel;
 using Microsoft.AspNetCore.HttpLogging;
 using JobNetworkAPI.API.Extensions;
+using JobNetworkAPI.SignalR;
+using JobNetworkAPI.SignalR.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureServices();
 builder.Services.AddApplicationServices();
+builder.Services.AddSignalRServices();
 
 //builder.Services.AddStorage<LocalStorage>();
 builder.Services.AddStorage<AzureStorage>();
@@ -40,7 +43,7 @@ builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
     //policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
-   policy.WithOrigins("https://localhost:4200/", "http://localhost:4200").AllowAnyHeader().AllowAnyMethod()
+   policy.WithOrigins("https://localhost:4200/", "http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
 ));
 
 SqlColumn sqlColumn = new SqlColumn();
@@ -149,5 +152,6 @@ app.Use(async (context, next) =>
 });
 
 app.MapControllers();
+app.MapHubs();
 
 app.Run();

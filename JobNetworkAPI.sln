@@ -12,12 +12,20 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{0DF0CD9A-41B5-4A74-A27F-35644C42A423}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobNetworkAPI.API", "Presentation\JobNetworkAPI.API\JobNetworkAPI.API.csproj", "{F7FF18D4-9C84-4E54-A773-6318803B92F3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{77F6ED91-B7C0-4DE0-BA34-804F38402C47} = {77F6ED91-B7C0-4DE0-BA34-804F38402C47}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{7E932227-A8C6-478A-B15F-96DDB3D63D14}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobNetworkAPI.Infrastructure", "Infrastructure\JobNetworkAPI.Infrastructure\JobNetworkAPI.Infrastructure.csproj", "{DF549641-3380-463E-885C-A97716DFB45B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobNetworkAPI.Persistence", "Infrastructure\JobNetworkAPI.Persistence\JobNetworkAPI.Persistence.csproj", "{8E966FAE-E453-4CC4-811C-701DB99C6587}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobNetworkAPI.SignalR", "Infrastructure\JobNetworkAPI.SignalR\JobNetworkAPI.SignalR.csproj", "{77F6ED91-B7C0-4DE0-BA34-804F38402C47}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D74256EB-AD27-4210-82E3-1D08CAD20730} = {D74256EB-AD27-4210-82E3-1D08CAD20730}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +53,10 @@ Global
 		{8E966FAE-E453-4CC4-811C-701DB99C6587}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E966FAE-E453-4CC4-811C-701DB99C6587}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E966FAE-E453-4CC4-811C-701DB99C6587}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77F6ED91-B7C0-4DE0-BA34-804F38402C47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77F6ED91-B7C0-4DE0-BA34-804F38402C47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77F6ED91-B7C0-4DE0-BA34-804F38402C47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77F6ED91-B7C0-4DE0-BA34-804F38402C47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +67,7 @@ Global
 		{F7FF18D4-9C84-4E54-A773-6318803B92F3} = {0DF0CD9A-41B5-4A74-A27F-35644C42A423}
 		{DF549641-3380-463E-885C-A97716DFB45B} = {7E932227-A8C6-478A-B15F-96DDB3D63D14}
 		{8E966FAE-E453-4CC4-811C-701DB99C6587} = {7E932227-A8C6-478A-B15F-96DDB3D63D14}
+		{77F6ED91-B7C0-4DE0-BA34-804F38402C47} = {7E932227-A8C6-478A-B15F-96DDB3D63D14}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A3C8CFAE-DB67-4620-99FA-C5B5ADA99F8C}

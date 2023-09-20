@@ -6,16 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JobNetworkAPI.Application.Abstractions.Hubs;
 
 namespace JobNetworkAPI.Application.Features.Commands.JobPost.CreateJobPost
 {
     public class CreateJobPostCommandHandler : IRequestHandler<CreateJobPostCommandRequest, CreateJobPostCommandResponse>
     {
         readonly IJobPostsWriteRepository _jobPostsWriteRepository;
+        readonly IJobPostHubService _jobPostHubService;
 
-        public CreateJobPostCommandHandler(IJobPostsWriteRepository jobPostsWriteRepository)
+        public CreateJobPostCommandHandler(IJobPostsWriteRepository jobPostsWriteRepository, IJobPostHubService jobPostHubService)
         {
             _jobPostsWriteRepository = jobPostsWriteRepository;
+            _jobPostHubService = jobPostHubService;
         }
         public async Task<CreateJobPostCommandResponse> Handle(CreateJobPostCommandRequest request, CancellationToken cancellationToken)
         {
@@ -33,6 +36,7 @@ namespace JobNetworkAPI.Application.Features.Commands.JobPost.CreateJobPost
             });
 
             await _jobPostsWriteRepository.SaveAsync();
+             await _jobPostHubService.JobPostAddedMessageAsync($"{request.Title} adlı ilan yayınlanmıştır.");
             return new();
 
         }
