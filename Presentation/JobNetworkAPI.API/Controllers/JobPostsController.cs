@@ -22,12 +22,16 @@ using JobNetworkAPI.Application.Features.Commands.JobPostImageFile.UploadJobPost
 using JobNetworkAPI.Application.Features.Commands.JobPostImageFile.RemoveJobPostImage;
 using JobNetworkAPI.Application.Features.Queries.JobPostImageFile.GetJobPostImages;
 using Microsoft.AspNetCore.Authorization;
+using JobNetworkAPI.Application.Features.Commands.JobPostImageFile.ChangeShowCaseImage;
+using JobNetworkAPI.Application.Consts;
+using JobNetworkAPI.Application.Enums;
+using JobNetworkAPI.Application.CustomAttributes;
 
 namespace JobNetworkAPI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    
     public class JobPostsController : ControllerBase
     {
         readonly IMediator _mediator;
@@ -61,7 +65,11 @@ namespace JobNetworkAPI.API.Controllers
         }
 
 
+
+
         [HttpPost]
+        [Authorize(AuthenticationSchemes = "Admin")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.JobPosts, ActionType = ActionType.Writing, Definition = "Create JobPost")]
         public async Task<ActionResult> Post(CreateJobPostCommandRequest createJobPostCommandRequest)
         {
             CreateJobPostCommandResponse response = await _mediator.Send(createJobPostCommandRequest);
@@ -74,6 +82,8 @@ namespace JobNetworkAPI.API.Controllers
 
 
         [HttpPut]
+        [Authorize(AuthenticationSchemes = "Admin")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.JobPosts, ActionType = ActionType.Updating, Definition = "Update JobPost")]
         public async Task<IActionResult> Put([FromBody]UpdateJobPostCommandRequest updateJobPostCommandRequest)
         {
             UpdateJobPostCommandResponse response = await _mediator.Send(updateJobPostCommandRequest);
@@ -84,6 +94,8 @@ namespace JobNetworkAPI.API.Controllers
 
 
         [HttpDelete("{Id}")]
+        [Authorize(AuthenticationSchemes = "Admin")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.JobPosts, ActionType = ActionType.Deleting, Definition = "Delete JobPost")]
         public async Task<IActionResult> Delete([FromRoute]RemoveJobPostCommandRequest removeJobPostCommandRequest )
         {
 
@@ -92,6 +104,8 @@ namespace JobNetworkAPI.API.Controllers
         }
 
         [HttpPost("[action]")]
+        [Authorize(AuthenticationSchemes = "Admin")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.JobPosts, ActionType = ActionType.Writing, Definition = "Upload JobPost File")]
         public async Task<IActionResult> Upload([FromQuery]UploadJobPostImageCommandRequest uploadJobPostImageCommandRequest)
         {
             uploadJobPostImageCommandRequest.Files = Request.Form.Files;
@@ -132,21 +146,9 @@ namespace JobNetworkAPI.API.Controllers
 
         }
 
-
-        //[HttpGet("[action]/{id}")]
-        //public async Task<IActionResult> GetImages(int id)
-        //{
-        //   JobPosts? jobpost = await _jobPostsReadRepository.Table.Include(p => p.JobPostImageFiles).FirstOrDefaultAsync(p => p.Id == id);
-
-        //    return Ok(jobpost.JobPostImageFiles.Select(p => new
-        //  {
-        //        p.Path,
-        //        p.FileName
-        //   }));
-
-        //}
-
-        [HttpGet("[action]/{id}")]
+         [HttpGet("[action]/{id}")]
+        [Authorize(AuthenticationSchemes = "Admin")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.JobPosts, ActionType = ActionType.Reading, Definition = "Get JobPosts Image")]
         public async Task<IActionResult> GetImages([FromRoute]GetJobPostImagesQueryRequest getJobPostImagesQueryRequest)
         {
             List<GetJobPostImagesQueryResponse> response = await _mediator.Send(getJobPostImagesQueryRequest);
@@ -155,6 +157,8 @@ namespace JobNetworkAPI.API.Controllers
         }
 
         [HttpDelete("[action]/{Id}")]
+        [Authorize(AuthenticationSchemes = "Admin")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.JobPosts, ActionType = ActionType.Deleting, Definition = "Delete JobPost Image")]
 
         public async Task<IActionResult> DeleteJobPostImage([FromRoute]RemoveJobPostImageCommandRequest removeJobPostImageCommandRequest, [FromQuery] string imageId)
         {
@@ -163,7 +167,13 @@ namespace JobNetworkAPI.API.Controllers
             return Ok();
         }
 
-
-
+        [HttpGet("[action]")]
+        [Authorize(AuthenticationSchemes = "Admin")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.JobPosts, ActionType = ActionType.Updating, Definition = "Change Showcase Image")]
+        public async Task<IActionResult> ChangeShowCaseImage([FromQuery] ChangeShowCaseImageCommandRequest changeShowcaseImageCommandRequest)
+        {
+            ChangeShowCaseImageCommandResponse response = await _mediator.Send(changeShowcaseImageCommandRequest);
+            return Ok(response);
+        }
     }
 }

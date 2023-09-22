@@ -78,8 +78,7 @@ columnOptions: columnOpt
 
 builder.Host.UseSerilog(log);
 
-var email = "user@example.com";
-log.Information("Bu bir bilgi logu. Email: {Email}", email);
+
 
 builder.Services.AddHttpLogging(logging =>
 {

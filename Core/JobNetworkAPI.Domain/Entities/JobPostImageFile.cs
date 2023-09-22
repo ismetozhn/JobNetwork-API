@@ -9,6 +9,8 @@ namespace JobNetworkAPI.Domain.Entities
 {
     public class JobPostImageFile : File
     {
+
+        public bool Showcase { get; set; }
         public ICollection<JobPosts> JobPost { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using JobNetworkAPI.Application.Repositories;
 using JobNetworkAPI.Application.RequestParameters;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -23,9 +24,12 @@ namespace JobNetworkAPI.Application.Features.Queries.JobPost.GetAllJobPost
         public async Task<GetAllJobPostQueryResponse> Handle(GetAllJobPostQueryRequest request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Get all jobposts");
-            var totalCount = _jobPostsReadRepository.GetAll(false).Count();
 
-            var jobPosts = _jobPostsReadRepository.GetAll().Skip(request.Page * request.Size).Take(request.Size).Select(j => new
+            var totalJobPostCount = _jobPostsReadRepository.GetAll(false).Count();
+
+            var jobPosts = _jobPostsReadRepository.GetAll(false).Skip(request.Page * request.Size).Take(request.Size)
+                .Include(j => j.JobPostImageFiles)
+                .Select(j => new
             {
                 j.Id,
                 j.JobTypeId,
@@ -34,13 +38,14 @@ namespace JobNetworkAPI.Application.Features.Queries.JobPost.GetAllJobPost
                 j.StartDate,
                 j.EndDate,
                 j.Title,
-                j.ImagePath
+                //j.ImagePath
+                j.JobPostImageFiles
             }).ToList();
 
             return new()
             {
                 JobPosts = jobPosts,
-                TotalCount = totalCount
+                TotalJobPostCount = totalJobPostCount
             };
         }
     }
