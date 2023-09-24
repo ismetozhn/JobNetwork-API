@@ -60,6 +60,7 @@ namespace JobNetworkAPI.Persistence
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IExternalAuthentication, AuthService>();
             services.AddScoped<IInternalAuthentication, AuthService>();
+            services.AddScoped<IRoleService, RoleService>();
 
 
 
